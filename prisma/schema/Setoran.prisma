@@ -1,0 +1,23 @@
+enum KategoriSetoran {
+  MURAJAAH
+  ZIYADAH
+  INTENS
+  BACAAN
+}
+
+model Setoran {
+  id_setoran      Int             @id @default(autoincrement())
+  id_santri       Int
+  
+  tanggal_setoran DateTime        @default(now())
+  
+  juz             Int
+  surat           String
+  ayat            String
+  kategori        KategoriSetoran 
+  
+  created_at      DateTime        @default(now())
+  updated_at      DateTime        @updatedAt
+
+  santri          Santri          @relation(fields: [id_santri], references: [id_santri])
+}

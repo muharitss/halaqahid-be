@@ -1,0 +1,19 @@
+enum JenisHalaqah {
+  TAHFIDZ
+  BACAAN
+}
+
+model Halaqah {
+  id_halaqah   Int          @id @default(autoincrement())
+  name_halaqah String
+  id_muhafiz   Int          @unique
+  
+  jenis        JenisHalaqah @default(TAHFIDZ) 
+  
+  created_at   DateTime     @default(now())
+  updated_at   DateTime     @updatedAt
+  deleted_at   DateTime?
+
+  user         User         @relation(fields: [id_muhafiz], references: [id_user])
+  santri       Santri[]
+}

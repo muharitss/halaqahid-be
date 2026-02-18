@@ -1,0 +1,24 @@
+
+enum StatusKehadiran {
+  HADIR
+  IZIN
+  SAKIT
+  ALFA
+  TERLAMBAT
+}
+
+model AbsensiAsatidz {
+  id_absensi      Int             @id @default(autoincrement())
+  id_user         Int             
+  tanggal_absensi DateTime        @default(now())
+  
+  status          StatusKehadiran 
+  keterangan      String?
+
+  created_at      DateTime        @default(now())
+  updated_at      DateTime        @updatedAt
+
+  user            User            @relation(fields: [id_user], references: [id_user])
+
+  @@map("absensi_asatidz") 
+}
