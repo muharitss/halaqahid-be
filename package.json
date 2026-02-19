@@ -8,7 +8,7 @@
     "postinstall": "prisma generate",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "tsx watch index.ts",
-    "prisma:migrate": "prisma generate && prisma migrate dev",
+    "prisma:migrate": "prisma migrate dev && prisma generate",
     "prisma:studio": "prisma studio",
     "prisma:reset": "prisma migrate reset"
   },
