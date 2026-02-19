@@ -5,7 +5,6 @@ export const inputSetoran = async (
   user: { id: number; role: string },
   data: any,
 ) => {
-  // Updated kategori validation untuk include INTENS dan BACAAN
   const validKategori = ["MURAJAAH", "ZIYADAH", "INTENS", "BACAAN", "HAFALAN"];
   if (data.kategori && !validKategori.includes(data.kategori)) {
     const error: any = new Error(
@@ -30,8 +29,6 @@ export const inputSetoran = async (
     throw error;
   }
 
-  // Permission check: muhafiz hanya bisa input setoran untuk santri di halaqahnya
-  // kepala_muhafiz: bypass pengecekan halaqah (bisa input untuk santri mana saja)
   if (user.role === "muhafiz") {
     const halaqahMuhafiz = await prisma.halaqah.findFirst({
       where: {
@@ -46,16 +43,19 @@ export const inputSetoran = async (
       throw error;
     }
   }
-  // kepala_muhafiz dan role lain yang diizinkan: skip pengecekan halaqah
 
-  // Custom tanggal_setoran: gunakan data.tanggal_setoran jika ada, jika tidak gunakan new Date()
   const tanggalSetoran = data.tanggal_setoran
     ? new Date(data.tanggal_setoran)
     : new Date();
 
+  const { santri_id, ...restData } = data;
+
   return await setoranRepo.createSetoran({
-    ...data,
+    ...restData,
     tanggal_setoran: tanggalSetoran,
+    santri: {
+      connect: { id_santri: Number(santri_id) }
+    }
   });
 };
 
