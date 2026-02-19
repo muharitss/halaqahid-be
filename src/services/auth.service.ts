@@ -161,3 +161,18 @@ export const restoreMuhafizAccount = async (id: number) => {
 
   return await userRepo.restoreUser(id);
 };
+
+export const getMe = async (id: number) => {
+  const user = await prisma.user.findUnique({
+    where: { id_user: id },
+  });
+
+  if (!user || user.deleted_at) {
+    const error: any = new Error("User tidak ditemukan");
+    error.status = 404;
+    throw error;
+  }
+
+  const { password: _, ...userResponse } = user;
+  return userResponse;
+};

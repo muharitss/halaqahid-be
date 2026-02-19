@@ -71,3 +71,12 @@ export const restoreMuhafiz = asyncHandler(
     );
   }
 );
+
+export const getMe = asyncHandler(async (req: Request, res: Response) => {
+  // Pastikan middleware auth Anda sudah menyimpan data user di req.user
+  // Biasanya: const user = req.user; 
+  const userId = (req as any).user.id; 
+
+  const result = await authService.getMe(Number(userId));
+  return successResponse(res, "Data profil berhasil diambil", result);
+});

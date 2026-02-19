@@ -8,11 +8,7 @@ const router = Router();
 
 router.post("/login", authController.login);
 
-router.get("/me", authMiddleware, (req, res) => {
-  const user = (req as any).user;
-
-  return successResponse(res, "User data retrieved", user);
-});
+router.get("/me", authMiddleware, authController.getMe);
 
 router.post(
   "/register",
