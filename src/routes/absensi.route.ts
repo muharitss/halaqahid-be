@@ -24,7 +24,7 @@ router.put(
 // V2: Input absensi asatidz (hanya kepala_muhafiz)
 router.post(
   "/asatidz",
-  roleMiddleware(["kepala_muhafiz"]),
+  roleMiddleware(["kepala_muhafiz", "superadmin"]),
   absensiController.createAsatidz,
 );
 
