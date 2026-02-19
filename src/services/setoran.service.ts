@@ -48,13 +48,14 @@ export const inputSetoran = async (
     ? new Date(data.tanggal_setoran)
     : new Date();
 
-  const { santri_id, taqwim, ...restData } = data;
+  const { santri_id, taqwim, keterangan, ...restData } = data;
   const jumlahKesalahan = parseInt(taqwim) || 0;
 
   return await setoranRepo.createSetoran({
     ...restData,
     taqwim: jumlahKesalahan,
     tanggal_setoran: tanggalSetoran,
+    keterangan: keterangan || "",
     santri: {
       connect: { id_santri: Number(santri_id) }
     }

@@ -17,6 +17,7 @@ model Setoran {
   ayat            String
   kategori        KategoriSetoran 
   taqwim          Int?
+  keterangan      String?
   
   created_at      DateTime        @default(now())
   updated_at      DateTime        @updatedAt
