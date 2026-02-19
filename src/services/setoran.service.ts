@@ -6,7 +6,7 @@ export const inputSetoran = async (
   data: any,
 ) => {
   // Updated kategori validation untuk include INTENS dan BACAAN
-  const validKategori = ["MURAJAAH", "ZIYADAH", "INTENS", "BACAAN"];
+  const validKategori = ["MURAJAAH", "ZIYADAH", "INTENS", "BACAAN", "HAFALAN"];
   if (data.kategori && !validKategori.includes(data.kategori)) {
     const error: any = new Error(
       `Kategori harus salah satu dari: ${validKategori.join(", ")}`,

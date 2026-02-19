@@ -3,6 +3,7 @@ enum KategoriSetoran {
   ZIYADAH
   INTENS
   BACAAN
+  HAFALAN
 }
 
 model Setoran {
