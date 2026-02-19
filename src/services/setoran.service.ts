@@ -35,7 +35,7 @@ export const inputSetoran = async (
   if (user.role === "muhafiz") {
     const halaqahMuhafiz = await prisma.halaqah.findFirst({
       where: {
-        id_muhafiz: Number(user.id),
+        muhafiz_id: Number(user.id),
       },
     });
     if (!halaqahMuhafiz || santri.halaqah_id !== halaqahMuhafiz.id_halaqah) {
@@ -77,7 +77,7 @@ export const getSantriHistory = async (
   if (user.role === "muhafiz") {
     const halaqah = await prisma.halaqah.findFirst({
       where: {
-        id_muhafiz: Number(user.id),
+        muhafiz_id: Number(user.id),
         deleted_at: null,
       },
     });

@@ -24,7 +24,7 @@ export const inputAbsensi = async (
   }
   if (user.role === "muhafiz") {
     const halaqah = await prisma.halaqah.findFirst({
-      where: { id_muhafiz: Number(user.id), deleted_at: null },
+      where: { muhafiz_id: Number(user.id), deleted_at: null },
     });
 
     if (!halaqah || santri.halaqah_id !== halaqah.id_halaqah) {
@@ -92,7 +92,7 @@ export const getSantriAbsensiHistory = async (
 
   if (user.role === "muhafiz") {
     const halaqah = await prisma.halaqah.findFirst({
-      where: { id_muhafiz: Number(user.id), deleted_at: null },
+      where: { muhafiz_id: Number(user.id), deleted_at: null },
     });
 
     if (!halaqah || santri.halaqah_id !== halaqah.id_halaqah) {
@@ -134,7 +134,7 @@ export const updateAbsensi = async (
   // Permission check: muhafiz hanya bisa edit absensi santri di halaqahnya
   if (user.role === "muhafiz") {
     const halaqah = await prisma.halaqah.findFirst({
-      where: { id_muhafiz: Number(user.id), deleted_at: null },
+      where: { muhafiz_id: Number(user.id), deleted_at: null },
     });
 
     if (!halaqah || absensi.santri.halaqah_id !== halaqah.id_halaqah) {

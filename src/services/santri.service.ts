@@ -6,7 +6,7 @@ export const getSantriList = async (user: { id: number; role: string }) => {
 
   if (user.role === "muhafiz") {
     const halaqah = await prisma.halaqah.findFirst({
-      where: { id_muhafiz: user.id, deleted_at: null },
+      where: { muhafiz_id: user.id, deleted_at: null },
     });
 
     if (!halaqah) throw new Error("Anda belum memiliki halaqah");
@@ -33,7 +33,7 @@ export const createNewSantri = async (
   if (user.role === "muhafiz") {
     const halaqah = await prisma.halaqah.findFirst({
       where: {
-        id_muhafiz: user.id,
+        muhafiz_id: user.id,
         deleted_at: null,
       },
     });
@@ -54,7 +54,7 @@ export const updateExistingSantri = async (
 
   if (user.role === "muhafiz") {
     const halaqah = await prisma.halaqah.findFirst({
-      where: { id_muhafiz: user.id, deleted_at: null },
+      where: { muhafiz_id: user.id, deleted_at: null },
     });
 
     if (santri.halaqah_id !== halaqah?.id_halaqah) {
@@ -79,7 +79,7 @@ export const deleteSantri = async (
 
   if (user.role === "muhafiz") {
     const halaqah = await prisma.halaqah.findFirst({
-      where: { id_muhafiz: user.id, deleted_at: null },
+      where: { muhafiz_id: user.id, deleted_at: null },
     });
     if (santri.halaqah_id !== halaqah?.id_halaqah) {
       const error: any = new Error(
