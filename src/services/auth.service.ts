@@ -20,6 +20,9 @@ export const login = async (data: any) => {
       ],
       deleted_at: null,
     },
+    include: {
+    halaqah: true 
+  }
   });
 
   if (!user || !(await bcrypt.compare(data.password, user.password))) {
@@ -39,7 +42,14 @@ export const login = async (data: any) => {
 
   const { password: _, ...userResponse } = user;
 
-  return { user: userResponse, token };
+  return { 
+    user: {
+      ...userResponse,
+      has_halaqah: !!user.halaqah, 
+      id_halaqah: user.halaqah?.id_halaqah || null
+    }, 
+    token 
+  };
 };
 
 export const registerMuhafiz = async (data: any) => {
@@ -165,6 +175,9 @@ export const restoreMuhafizAccount = async (id: number) => {
 export const getMe = async (id: number) => {
   const user = await prisma.user.findUnique({
     where: { id_user: id },
+    include: {
+      halaqah: true,
+    }
   });
 
   if (!user || user.deleted_at) {
@@ -174,5 +187,9 @@ export const getMe = async (id: number) => {
   }
 
   const { password: _, ...userResponse } = user;
-  return userResponse;
+  return {
+    ...userResponse,
+    has_halaqah: !!user.halaqah,
+    id_halaqah: user.halaqah?.id_halaqah || null
+  };
 };
