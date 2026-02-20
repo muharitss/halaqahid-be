@@ -118,7 +118,7 @@ export const updateMuhafiz = async (
 };
 
 export const impersonateMuhafiz = async (muhafizId: number) => {
-  const user = await prisma.user.findUnique({ where: { id_user: muhafizId } });
+  const user = await prisma.user.findUnique({ where: { id_user: muhafizId }, include: { halaqah: true } });
 
   if (!user || user.deleted_at || user.role !== "muhafiz") {
     const error: any = new Error(
@@ -139,7 +139,14 @@ export const impersonateMuhafiz = async (muhafizId: number) => {
 
   const { password: _, ...userResponse } = user;
 
-  return { user: userResponse, token };
+  return { 
+    user: {
+      ...userResponse,
+      has_halaqah: !!user.halaqah,
+      id_halaqah: user.halaqah?.id_halaqah || null
+    }, 
+    token 
+  };
 };
 
 export const getDeletedMuhafiz = async () => {
