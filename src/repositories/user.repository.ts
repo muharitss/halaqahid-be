@@ -11,6 +11,7 @@ export const findAllMuhafiz = async () => {
       username: true,
       email: true,
       role: true,
+      halaqah: true,
     },
   });
 };

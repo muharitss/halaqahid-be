@@ -1,6 +1,7 @@
 enum JenisHalaqah {
   TAHFIDZ
   BACAAN
+  INTENSIF
 }
 
 model Halaqah {
