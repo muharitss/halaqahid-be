@@ -12,10 +12,12 @@ router.post("/", absensiController.create);
 
 router.get("/santri/:santriId", absensiController.getBySantri);
 
+router.get("/muhafiz/:muhafizId", absensiController.getByMuhafiz);
+
 router.get("/halaqah/:halaqahId", absensiController.getByHalaqah);
 
 // V2: Edit absensi (untuk perbaikan human error)
-router.put(
+router.patch(
   "/:id",
   roleMiddleware(["muhafiz", "kepala_muhafiz"]),
   absensiController.update,
@@ -27,5 +29,7 @@ router.post(
   roleMiddleware(["kepala_muhafiz", "superadmin"]),
   absensiController.createAsatidz,
 );
+
+
 
 export default router;

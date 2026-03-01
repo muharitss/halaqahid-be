@@ -43,6 +43,8 @@ export const getByHalaqah = asyncHandler(async (req: any, res: Response) => {
   return successResponse(res, "Data absensi halaqah berhasil diambil", result);
 });
 
+
+
 export const update = asyncHandler(async (req: any, res: Response) => {
   const { id } = req.params;
 

@@ -107,6 +107,8 @@ export const getSantriAbsensiHistory = async (
   return await absensiRepo.getAbsensiBySantri(santriId);
 };
 
+export const getMuhafizAbsensiHistory = 
+
 /**
  * Update absensi dengan permission check berdasarkan role
  * - muhafiz: hanya bisa edit absensi santri di halaqahnya

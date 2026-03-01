@@ -51,3 +51,19 @@ export const restoreHalaqah = asyncHandler(
     return successResponse(res, "Halaqah berhasil dihapus", restored);
   }
 );
+
+export const getHalaqahDetail = asyncHandler(
+  async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const halaqah = await halaqahRepository.getHalaqahById(Number(id));
+
+    if (!halaqah) {
+      return res.status(404).json({
+        success: false,
+        message: "Halaqah tidak ditemukan",
+      });
+    }
+
+    return successResponse(res, "Detail halaqah berhasil diambil", halaqah);
+  }
+);
