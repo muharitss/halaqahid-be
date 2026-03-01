@@ -58,3 +58,29 @@ export const getAbsensiByHalaqah = async (halaqahId: number, date?: string) => {
     },
   });
 };
+
+export const getAbsensiMonthly = async (halaqahId: number, month: number, year: number) => {
+  const startOfMonth = new Date(year, month - 1, 1);
+  const endOfMonth = new Date(year, month, 0, 23, 59, 59, 999);
+
+  return await prisma.absensi.findMany({
+    where: {
+      santri: {
+        halaqah_id: halaqahId, 
+        deleted_at: null,
+      },
+      tanggal: {
+        gte: startOfMonth,
+        lte: endOfMonth,
+      },
+    },
+    select: {
+      santri_id: true,
+      status: true,
+      tanggal: true,
+    },
+    orderBy: {
+      tanggal: "asc",
+    },
+  });
+};

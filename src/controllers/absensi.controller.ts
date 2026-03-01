@@ -33,14 +33,32 @@ export const getBySantri = asyncHandler(async (req: any, res: Response) => {
 
 export const getByHalaqah = asyncHandler(async (req: any, res: Response) => {
   const { halaqahId } = req.params;
-  const { date } = req.query;
+  const { date, month, year } = req.query;
+
+  const idHalaqah = Number(halaqahId);
+  if (isNaN(idHalaqah)) {
+    const error: any = new Error("ID Halaqah tidak valid");
+    error.status = 400;
+    throw error;
+  }
+
+  if (month && year) {
+    const result = await absensiService.getMonthlyRekapHalaqah(
+      idHalaqah,
+      req.user, 
+      Number(month),
+      Number(year)
+    );
+
+    return successResponse(res, "Rekap absensi bulanan berhasil diambil", result);
+  }
 
   const result = await absensiRepo.getAbsensiByHalaqah(
-    Number(halaqahId),
-    date as string,
+    idHalaqah,
+    date as string
   );
 
-  return successResponse(res, "Data absensi halaqah berhasil diambil", result);
+  return successResponse(res, "Data absensi halaqah harian berhasil diambil", result);
 });
 
 
