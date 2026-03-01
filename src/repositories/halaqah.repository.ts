@@ -41,14 +41,26 @@ export const getAllHalaqah = async () => {
 };
 
 export const getHalaqahById = async (id: number) => {
-  return await prisma.halaqah.findUnique({
+  return await prisma.halaqah.findFirst({
     where: {
       id_halaqah: id,
       deleted_at: null,
     },
     include: {
-      user: true,
-      santri: true,
+      user: {
+        select: { id_user: true, username: true, email: true },
+      },
+      santri: {
+        where: {
+          deleted_at: null,
+        },
+        select: {
+          id_santri: true,
+          nama_santri: true,
+          nomor_telepon: true,
+          target: true,
+        },
+      },
     },
   });
 };
