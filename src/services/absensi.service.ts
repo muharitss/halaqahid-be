@@ -244,44 +244,40 @@ export const getMonthlyRekapHalaqah = async (
   month: number,
   year: number
 ) => {
-  // 1. Validasi Akses: Muhafiz hanya bisa melihat halaqahnya sendiri
+  // 1. Validasi Akses (Hanya Muhafiz yang bersangkutan atau Role Atasan)
   if (user.role === "muhafiz") {
     const halaqah = await prisma.halaqah.findFirst({
-      where: { 
-        id_halaqah: halaqahId,
-        muhafiz_id: Number(user.id), 
-        deleted_at: null 
-      },
+      where: { id_halaqah: halaqahId, muhafiz_id: Number(user.id) },
     });
-
     if (!halaqah) {
-      const error: any = new Error("Akses ditolak: Ini bukan halaqah Anda!");
-      error.status = 403;
-      throw error;
+        const error: any = new Error("Akses ditolak: Ini bukan halaqah Anda");
+        error.status = 403;
+        throw error;
     }
   }
 
   // 2. Ambil data mentah dari repository
   const rawData = await absensiRepo.getAbsensiMonthly(halaqahId, month, year);
 
-  // 3. Transformasi data ke format yang diminta Frontend (RekapAbsensiTable)
-  // Mengelompokkan data absensi berdasarkan tanggal (YYYY-MM-DD)
+  // 3. Grouping data per tanggal
+  // Kita pastikan format key-nya adalah 'YYYY-MM-DD'
   const grouped = rawData.reduce((acc: any, curr) => {
-    // Gunakan toLocaleDateString atau manual split untuk menghindari pergeseran timezone
-    const dateStr = curr.tanggal.toISOString().split('T')[0];
-    
+    // Hilangkan jam/menit/detik, ambil tanggalnya saja
+    const dateStr = curr.tanggal.toISOString().split("T")[0];
+
     if (!acc[dateStr]) acc[dateStr] = [];
     
     acc[dateStr].push({
       santri_id: curr.santri_id,
-      status: curr.status
+      status: curr.status,
     });
+    
     return acc;
   }, {});
 
-  // 4. Ubah object map menjadi Array agar map() di FE tidak error
-  return Object.keys(grouped).map(tgl => ({
+  // 4. Ubah object menjadi array sesuai interface MonthlyAbsensiData di frontend
+  return Object.keys(grouped).map((tgl) => ({
     tanggal: tgl,
-    data: grouped[tgl]
+    data: grouped[tgl],
   }));
 };
