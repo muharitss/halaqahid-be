@@ -12,8 +12,6 @@ router.post("/", absensiController.create);
 
 router.get("/santri/:santriId", absensiController.getBySantri);
 
-router.get("/muhafiz/:muhafizId", absensiController.getByMuhafiz);
-
 router.get("/halaqah/:halaqahId", absensiController.getByHalaqah);
 
 // V2: Edit absensi (untuk perbaikan human error)
