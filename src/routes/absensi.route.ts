@@ -27,6 +27,12 @@ router.patch(
   absensiController.update,
 );
 
+router.patch(
+  "/asatidz/:id",
+  roleMiddleware(["kepala_muhafiz", "superadmin"]),
+  absensiController.updateAsatidz
+);
+
 // V2: Input absensi asatidz (hanya kepala_muhafiz)
 router.post(
   "/asatidz",

@@ -72,3 +72,9 @@ export const getAsatidzMonthly = asyncHandler(async (req: any, res: Response) =>
   
   return successResponse(res, "Rekap absensi bulanan asatidz berhasil diambil", result);
 });
+
+export const updateAsatidz = asyncHandler(async (req: any, res: Response) => {
+  const { id } = req.params;
+  const result = await absensiService.updateAbsensiAsatidz(Number(id), req.body);
+  return successResponse(res, "Absensi asatidz berhasil diperbarui", result);
+});

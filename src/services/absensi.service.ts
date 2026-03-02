@@ -309,3 +309,37 @@ export const getMonthlyRekapAsatidz = async (month: number, year: number) => {
     data: grouped[tgl],
   }));
 };
+
+export const updateAbsensiAsatidz = async (
+  id: number,
+  data: any
+) => {
+  const absensi = await prisma.absensiAsatidz.findUnique({
+    where: { id_absensi: id },
+  });
+
+  if (!absensi) {
+    const error: any = new Error("Data absensi asatidz tidak ditemukan");
+    error.status = 404;
+    throw error;
+  }
+
+  // Validasi status jika dikirim
+  if (data.status) {
+    const validStatus = ["HADIR", "IZIN", "SAKIT", "ALFA", "TERLAMBAT"];
+    if (!validStatus.includes(data.status)) {
+      const error: any = new Error(`Status tidak valid`);
+      error.status = 400;
+      throw error;
+    }
+  }
+
+  return await prisma.absensiAsatidz.update({
+    where: { id_absensi: id },
+    data: {
+      status: data.status || absensi.status,
+      keterangan: data.keterangan !== undefined ? data.keterangan : absensi.keterangan,
+      tanggal_absensi: data.tanggal_absensi ? new Date(data.tanggal_absensi) : absensi.tanggal_absensi,
+    },
+  });
+};
