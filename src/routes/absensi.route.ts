@@ -14,6 +14,12 @@ router.get("/santri/:santriId", absensiController.getBySantri);
 
 router.get("/halaqah/:halaqahId", absensiController.getByHalaqah);
 
+router.get(
+  "/asatidz/rekap",
+  roleMiddleware(["kepala_muhafiz", "superadmin"]),
+  absensiController.getAsatidzMonthly
+);
+
 // V2: Edit absensi (untuk perbaikan human error)
 router.patch(
   "/:id",

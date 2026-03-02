@@ -55,3 +55,20 @@ export const createAsatidz = asyncHandler(async (req: any, res: Response) => {
   const result = await absensiService.inputAbsensiAsatidz(req.body);
   return successResponse(res, "Absensi asatidz berhasil dicatat", result, undefined, 201);
 });
+
+export const getAsatidzMonthly = asyncHandler(async (req: any, res: Response) => {
+  const { month, year } = req.query;
+
+  if (!month || !year) {
+    const error: any = new Error("Month dan Year harus disertakan");
+    error.status = 400;
+    throw error;
+  }
+
+  const result = await absensiService.getMonthlyRekapAsatidz(
+    Number(month),
+    Number(year)
+  );
+  
+  return successResponse(res, "Rekap absensi bulanan asatidz berhasil diambil", result);
+});

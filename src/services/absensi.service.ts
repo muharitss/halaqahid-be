@@ -281,3 +281,31 @@ export const getMonthlyRekapHalaqah = async (
     data: grouped[tgl],
   }));
 };
+
+export const getMonthlyRekapAsatidz = async (month: number, year: number) => {
+  // 1. Ambil data mentah
+  const rawData = await absensiRepo.getAbsensiAsatidzMonthly(month, year);
+
+  // 2. Grouping data per tanggal
+  const grouped = rawData.reduce((acc: any, curr) => {
+    const dateStr = curr.tanggal_absensi.toISOString().split("T")[0];
+
+    if (!acc[dateStr]) acc[dateStr] = [];
+
+    acc[dateStr].push({
+      id_absensi: curr.id_absensi,
+      id_user: curr.id_user,
+      nama_asatidz: curr.user.username,
+      status: curr.status,
+      keterangan: curr.keterangan
+    });
+
+    return acc;
+  }, {});
+
+  // 3. Transform ke array
+  return Object.keys(grouped).map((tgl) => ({
+    tanggal: tgl,
+    data: grouped[tgl],
+  }));
+};

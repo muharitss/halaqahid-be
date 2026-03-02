@@ -78,3 +78,28 @@ export const getAbsensiMonthly = async (halaqahId: number, month: number, year: 
     },
   });
 };
+
+export const getAbsensiAsatidzMonthly = async (month: number, year: number, userId?: number) => {
+  const startDate = new Date(year, month - 1, 1);
+  const endDate = new Date(year, month, 0, 23, 59, 59);
+
+  return await prisma.absensiAsatidz.findMany({
+    where: {
+      ...(userId && { id_user: userId }), 
+      tanggal_absensi: {
+        gte: startDate,
+        lte: endDate,
+      },
+    },
+    include: {
+      user: {
+        select: {
+          username: true, 
+        },
+      },
+    },
+    orderBy: {
+      tanggal_absensi: "asc",
+    },
+  });
+};
