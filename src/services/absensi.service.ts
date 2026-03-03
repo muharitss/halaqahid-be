@@ -180,6 +180,7 @@ export const updateAbsensi = async (
  
   export const inputAbsensiAsatidz = async (data: any) => {
   const userId = Number(data.user_id);
+  const inputDate = data.tanggal ? new Date(data.tanggal) : new Date();
 
   if (isNaN(userId)) {
     const error: any = new Error("user_id tidak valid atau tidak ditemukan");
@@ -208,45 +209,37 @@ export const updateAbsensi = async (
     throw error;
   }
 
-  // Cek apakah sudah ada absensi hari ini untuk user ini
-  const inputDate = data.tanggal_absensi
-    ? new Date(data.tanggal_absensi)
-    : data.tanggal
-      ? new Date(data.tanggal)
-      : new Date();
-
   const startOfDay = new Date(inputDate);
   startOfDay.setHours(0, 0, 0, 0);
   const endOfDay = new Date(inputDate);
   endOfDay.setHours(23, 59, 59, 999);
 
-  const existingAbsensi = await prisma.absensiAsatidz.findFirst({
+  const existing = await prisma.absensiAsatidz.findFirst({
     where: {
       id_user: userId,
-      tanggal_absensi: { gte: startOfDay, lte: endOfDay },
-    },
+      tanggal_absensi: { gte: startOfDay, lte: endOfDay }
+    }
   });
 
-  // JIKA SUDAH ADA, LAKUKAN UPDATE (UPSERT LOGIC)
-  if (existingAbsensi) {
+  if (existing) {
+    // JIKA ADA, UPDATE (Fitur Edit)
     return await prisma.absensiAsatidz.update({
-      where: { id_absensi: existingAbsensi.id_absensi },
-      data: {
+      where: { id_absensi: existing.id_absensi },
+      data: { 
         status: data.status,
-        keterangan: data.keterangan || null,
-        // tanggal_absensi tidak diupdate agar tetap pada tanggal aslinya
-      },
+        keterangan: data.keterangan || null 
+      }
     });
   }
 
-  // JIKA BELUM ADA, BARU CREATE
+  // JIKA TIDAK ADA, CREATE
   return await prisma.absensiAsatidz.create({
     data: {
       id_user: userId,
       status: data.status,
       keterangan: data.keterangan || null,
-      tanggal_absensi: inputDate,
-    },
+      tanggal_absensi: inputDate
+    }
   });
 };
 
