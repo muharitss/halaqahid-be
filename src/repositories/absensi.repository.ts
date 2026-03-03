@@ -103,3 +103,21 @@ export const getAbsensiAsatidzMonthly = async (month: number, year: number, user
     },
   });
 };
+
+export const getDailyAsatidz = async (date: Date) => {
+  const start = new Date(date);
+  start.setHours(0, 0, 0, 0);
+  const end = new Date(date);
+  end.setHours(23, 59, 59, 999);
+
+  return await prisma.absensiAsatidz.findMany({
+    where: {
+      tanggal_absensi: { gte: start, lte: end }
+    },
+    select: {
+      id_user: true,   // PASTIKAN INI ADA
+      status: true,    // PASTIKAN INI ADA
+      keterangan: true
+    }
+  });
+};
