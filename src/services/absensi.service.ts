@@ -348,3 +348,32 @@ export const updateAbsensiAsatidz = async (
     },
   });
 };
+
+export const getAllMonthlyRekapSantri = async (month: number, year: number) => {
+  // 1. Ambil data mentah dari repo
+  const rawData = await absensiRepo.getAllSantriAbsensiMonthly(month, year);
+
+  // 2. Grouping per tanggal
+  const grouped = rawData.reduce((acc: any, curr) => {
+    const dateStr = curr.tanggal.toISOString().split("T")[0];
+
+    if (!acc[dateStr]) acc[dateStr] = [];
+    
+    acc[dateStr].push({
+      id_absensi: curr.id_absensi,
+      santri_id: curr.santri_id,
+      nama_santri: curr.santri.nama_santri,
+      name_halaqah: curr.santri.halaqah?.name_halaqah || "Tanpa Halaqah",
+      status: curr.status,
+      keterangan: curr.keterangan
+    });
+    
+    return acc;
+  }, {});
+
+  // 3. Transform ke format array tanggal
+  return Object.keys(grouped).map((tgl) => ({
+    tanggal: tgl,
+    data: grouped[tgl],
+  }));
+};

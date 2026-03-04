@@ -20,6 +20,12 @@ router.get(
   absensiController.getAsatidzMonthly
 );
 
+router.get(
+  "/santri/rekap/all",
+  roleMiddleware(["kepala_muhafiz", "superadmin"]),
+  absensiController.getAllSantriMonthly
+);
+
 // V2: Edit absensi (untuk perbaikan human error)
 router.patch(
   "/:id",

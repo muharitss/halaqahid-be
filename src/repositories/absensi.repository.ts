@@ -121,3 +121,32 @@ export const getDailyAsatidz = async (date: Date) => {
     }
   });
 };
+
+export const getAllSantriAbsensiMonthly = async (month: number, year: number) => {
+  const startDate = new Date(year, month - 1, 1);
+  const endDate = new Date(year, month, 0, 23, 59, 59);
+
+  return await prisma.absensi.findMany({
+    where: {
+      tanggal: {
+        gte: startDate,
+        lte: endDate,
+      },
+    },
+    include: {
+      santri: {
+        select: {
+          nama_santri: true,
+          halaqah: {
+            select: {
+              name_halaqah: true
+            }
+          }
+        },
+      },
+    },
+    orderBy: {
+      tanggal: "asc",
+    },
+  });
+};

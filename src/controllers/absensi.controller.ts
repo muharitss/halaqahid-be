@@ -78,3 +78,20 @@ export const updateAsatidz = asyncHandler(async (req: any, res: Response) => {
   const result = await absensiService.updateAbsensiAsatidz(Number(id), req.body);
   return successResponse(res, "Absensi asatidz berhasil diperbarui", result);
 });
+
+export const getAllSantriMonthly = asyncHandler(async (req: any, res: Response) => {
+  const { month, year } = req.query;
+
+  if (!month || !year) {
+    const error: any = new Error("Month dan Year harus disertakan");
+    error.status = 400;
+    throw error;
+  }
+
+  const result = await absensiService.getAllMonthlyRekapSantri(
+    Number(month),
+    Number(year)
+  );
+  
+  return successResponse(res, "Rekap semua absensi santri berhasil diambil", result);
+});
