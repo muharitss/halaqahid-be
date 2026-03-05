@@ -10,5 +10,6 @@ router.get(
 router.get("/halaqah", displayController.getPublicHalaqah);
 router.get("/setoran/all", displayController.getAllSetoranPublic);
 router.get("/santri", displayController.getPublicSantri);
+router.get("/santri/:id", displayController.getPublicSantriDetail);
 
 export default router;

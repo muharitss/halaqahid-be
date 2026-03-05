@@ -88,3 +88,64 @@ export const getPublicSantri = asyncHandler(
     );
   },
 );
+
+
+export const getPublicSantriDetail = asyncHandler(
+  async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const { month, year } = req.query;
+
+    // Default ke bulan dan tahun sekarang jika tidak ada query param
+    const currentMonth = month ? Number(month) : new Date().getMonth() + 1;
+    const currentYear = year ? Number(year) : new Date().getFullYear();
+
+    const santri = await santriRepo.getSantriDetailFull(
+      Number(id),
+      currentMonth,
+      currentYear
+    );
+
+    if (!santri) {
+      return res.status(404).json({ message: "Santri tidak ditemukan" });
+    }
+
+    // Format data agar enak dibaca frontend
+    const formattedData = {
+      profil: {
+        id_santri: santri.id_santri,
+        nama_santri: santri.nama_santri,
+        nomor_telepon: santri.nomor_telepon || "-",
+        target: santri.target,
+        nama_halaqah: santri.halaqah?.name_halaqah || "Tanpa Halaqah",
+        nama_muhafiz: santri.halaqah?.user?.username || "Belum ditentukan",
+      },
+      statistik_bulanan: {
+        bulan: currentMonth,
+        tahun: currentYear,
+        total_hadir: santri.absensi.filter(a => a.status === "HADIR").length,
+        total_setoran: santri.setoran.length,
+      },
+      riwayat_absensi: santri.absensi.map(a => ({
+        id_absensi: a.id_absensi,
+        tanggal: a.tanggal,
+        status: a.status,
+        keterangan: a.keterangan || "-",
+      })),
+      riwayat_setoran: santri.setoran.map(s => ({
+        id_setoran: s.id_setoran,
+        tanggal: s.tanggal_setoran,
+        juz: s.juz,
+        surat: s.surat,
+        ayat: s.ayat,
+        kategori: s.kategori,
+        keterangan: s.keterangan || "-",
+      })),
+    };
+
+    return successResponse(
+      res,
+      "Detail data santri berhasil diambil",
+      formattedData
+    );
+  }
+);

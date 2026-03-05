@@ -75,3 +75,47 @@ export const getDeletedSantriById = async (id: number) => {
     },
   });
 };
+
+// Tambahkan di src/repositories/santri.repository.ts
+
+export const getSantriDetailFull = async (id: number, month: number, year: number) => {
+  const startDate = new Date(year, month - 1, 1);
+  const endDate = new Date(year, month, 0, 23, 59, 59);
+
+  return await prisma.santri.findUnique({
+    where: {
+      id_santri: id,
+      deleted_at: null,
+    },
+    include: {
+      halaqah: {
+        include: {
+          user: {
+            select: {
+              username: true,
+              email: true,
+            },
+          },
+        },
+      },
+      absensi: {
+        where: {
+          tanggal: {
+            gte: startDate,
+            lte: endDate,
+          },
+        },
+        orderBy: { tanggal: "desc" },
+      },
+      setoran: {
+        where: {
+          tanggal_setoran: {
+            gte: startDate,
+            lte: endDate,
+          },
+        },
+        orderBy: { tanggal_setoran: "desc" },
+      },
+    },
+  });
+};

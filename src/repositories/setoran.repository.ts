@@ -52,3 +52,4 @@ export const getAllSetoran = async (startDate?: Date, endDate?: Date) => {
     },
   });
 };
+
